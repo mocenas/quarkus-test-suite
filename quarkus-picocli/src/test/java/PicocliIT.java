@@ -18,35 +18,35 @@ public class PicocliIT {
     static final String AGE_VALUE = "30";
 
     @QuarkusApplication
-    static final RestService greetingApp = new RestService()
+    static final RestService greeting = new RestService()
             .withProperty("quarkus.args",
                     GREETING_COMMAND_DESC + " " + GREETING_NAME_OPTION + " " + GREETING_NAME_VALUE)
             .setAutoStart(false);
 
     @QuarkusApplication
-    static final RestService ageApp = new RestService()
+    static final RestService age = new RestService()
             .withProperty("quarkus.args",
                     AGE_COMMAND_DESC + " " + AGE_OPTION + " " + AGE_VALUE)
             .setAutoStart(false);
 
     @QuarkusApplication
-    static final RestService greetingBlankArgumentApp = new RestService()
+    static final RestService blank = new RestService()
             .withProperty("quarkus.args",
                     "" + " " + GREETING_NAME_OPTION + " " + GREETING_NAME_VALUE)
             .setAutoStart(false);
 
     @QuarkusApplication
-    static final RestService greetingInvalidArgumentApp = new RestService()
+    static final RestService invalid = new RestService()
             .withProperty("quarkus.args",
                     GREETING_COMMAND_DESC + " " + "-x" + " " + GREETING_NAME_VALUE)
             .setAutoStart(false);
 
     @QuarkusApplication
-    static final RestService bothTopCommandApp = new RestService()
+    static final RestService topcommand = new RestService()
             .setAutoStart(false);
 
     @QuarkusApplication
-    static final RestService customizedCommandApp = new RestService()
+    static final RestService customized = new RestService()
             .withProperty("quarkus.args", "customized-command")
             .setAutoStart(false);
 
@@ -54,10 +54,10 @@ public class PicocliIT {
     public void verifyErrorForApplicationScopedBeanInPicocliCommand() {
         String expectedAgeOutput = String.format("Your age is: %s", AGE_VALUE);
         try {
-            runAsync(ageApp::start);
-            ageApp.logs().assertContains(expectedAgeOutput);
+            runAsync(age::start);
+            age.logs().assertContains(expectedAgeOutput);
         } finally {
-            ageApp.stop();
+            age.stop();
         }
     }
 
@@ -65,10 +65,10 @@ public class PicocliIT {
     public void verifyGreetingCommandOutputsExpectedMessage() {
         String expectedOutput = String.format("Hello %s!", GREETING_NAME_VALUE);
         try {
-            runAsync(greetingApp::start);
-            greetingApp.logs().assertContains(expectedOutput);
+            runAsync(greeting::start);
+            greeting.logs().assertContains(expectedOutput);
         } finally {
-            greetingApp.stop();
+            greeting.stop();
         }
 
     }
@@ -77,10 +77,10 @@ public class PicocliIT {
     void verifyErrorForBlankArgumentsInGreetingCommand() {
         String expectedError = "Unmatched arguments from index 0: '', '--name', 'QE'";
         try {
-            runAsync(greetingBlankArgumentApp::start);
-            greetingBlankArgumentApp.logs().assertContains(expectedError);
+            runAsync(blank::start);
+            blank.logs().assertContains(expectedError);
         } finally {
-            greetingBlankArgumentApp.stop();
+            blank.stop();
         }
     }
 
@@ -88,10 +88,10 @@ public class PicocliIT {
     void verifyErrorForInvalidArgumentsInGreetingCommand() {
         String expectedError = "Unknown options: '-x', 'QE'";
         try {
-            runAsync(greetingInvalidArgumentApp::start);
-            greetingInvalidArgumentApp.logs().assertContains(expectedError);
+            runAsync(invalid::start);
+            invalid.logs().assertContains(expectedError);
         } finally {
-            greetingInvalidArgumentApp.stop();
+            invalid.stop();
         }
     }
 
@@ -100,17 +100,17 @@ public class PicocliIT {
      */
     @Test
     public void verifyErrorForMultipleCommandsWithoutTopCommand() {
-        bothTopCommandApp
+        topcommand
                 .withProperty("quarkus.args",
                         GREETING_COMMAND_DESC + " " + GREETING_NAME_OPTION + " " + "EEUU" + " " +
                                 AGE_COMMAND_DESC + " " + AGE_OPTION + " " + "247");
         String errorMessage = "Unmatched arguments from index 3: 'age', '--age', '247'";
 
         try {
-            runAsync(bothTopCommandApp::start);
-            bothTopCommandApp.logs().assertContains(errorMessage);
+            runAsync(topcommand::start);
+            topcommand.logs().assertContains(errorMessage);
         } finally {
-            bothTopCommandApp.stop();
+            topcommand.stop();
         }
     }
 
@@ -118,10 +118,10 @@ public class PicocliIT {
     public void verifyCustomizedCommandLineBehavior() {
         String expectedOutput = "customized";
         try {
-            runAsync(customizedCommandApp::start);
-            customizedCommandApp.logs().assertContains(expectedOutput);
+            runAsync(customized::start);
+            customized.logs().assertContains(expectedOutput);
         } finally {
-            customizedCommandApp.stop();
+            customized.stop();
         }
     }
 }
