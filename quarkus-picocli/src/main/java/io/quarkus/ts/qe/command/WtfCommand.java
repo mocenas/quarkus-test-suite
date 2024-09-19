@@ -7,12 +7,12 @@ import picocli.CommandLine;
 //@TopCommand
 @CommandLine.Command(name = "customized-command", mixinStandardHelpOptions = true, subcommands = { HelloCommand.class,
         AgeCommand.class })
-public class EntryCommand implements Runnable {
+public class WtfCommand implements Runnable {
     @CommandLine.Spec
     CommandLine.Model.CommandSpec spec;
 
     @Override
     public void run() {
-        Log.info("Running Entry command with name: " + spec.name());
+        Log.info("Running Wtf command with name: " + spec.name());
     }
 }
