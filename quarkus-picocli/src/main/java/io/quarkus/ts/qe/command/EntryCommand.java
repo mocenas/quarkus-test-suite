@@ -2,6 +2,8 @@ package io.quarkus.ts.qe.command;
 
 import io.quarkus.logging.Log;
 import io.quarkus.picocli.runtime.annotations.TopCommand;
+import io.quarkus.runtime.Quarkus;
+import io.quarkus.ts.qe.services.RestService;
 
 import picocli.CommandLine;
 
@@ -15,5 +17,7 @@ public class EntryCommand implements Runnable {
     @Override
     public void run() {
         Log.info("Running command with name: " + spec.name());
+        RestService.setConfiguredResponse("Default Entry Command");
+        Quarkus.waitForExit();
     }
 }

@@ -3,7 +3,9 @@ package io.quarkus.ts.qe.command;
 import jakarta.inject.Inject;
 
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.Quarkus;
 import io.quarkus.ts.qe.services.HelloService;
+import io.quarkus.ts.qe.services.RestService;
 
 import picocli.CommandLine;
 
@@ -24,7 +26,8 @@ public class HelloCommand implements Runnable {
     @Override
     public void run() {
         Log.info("Executing HelloCommand with name: " + name);
-        helloService.greet(name);
+        RestService.setConfiguredResponse(helloService.greet(name));
+        Quarkus.waitForExit();
     }
 
 }
